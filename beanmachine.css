@@ -1,0 +1,32 @@
+@charset "utf-8";
+/* CSS Document*/
+/*Define the body element's color*/
+body
+{
+    background: #FFFFFF;
+}
+
+
+#control_container {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 800px;
+	height: 40px;
+	background: #FFFFFF;
+    color: #000000;
+}
+
+#bean_machine_container {
+    position: absolute;
+    left: 0px;
+    top: 40px;
+}
+
+#notice_container {
+    position: absolute;
+    left: 0px;
+    top: 650px;
+}
+
+

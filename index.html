@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+
+
+<!--- BeanMachine by Freeman Deutsch, freemansoftwaresolutions@gmail.com, October 31st, 2014 --->
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Bean Machine</title>
+    <link rel="stylesheet" href="beanmachine.css" />
+    <script type="text/javascript" src="beanmachine.js"></script>
+</head>
+
+<body onload="init()">
+
+    <div id="container" style="width:800px">
+
+        <div id="control_container">
+
+
+            <input type="checkbox" checked id="state" value="Run" onchange="changeRunning()" />Running 
+
+            <img src="images/vertical-divider.jpg">
+            
+            Speed:
+            <select name="speed" id="speed" onchange="changeSpeed()">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option> 
+                <option value="4">4</option>
+                <option value="5" selected="selected">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+            </select>
+
+
+
+            <img src="images/vertical-divider.jpg">
+            
+            <button type="button" onclick="reset()">Reset</button>
+
+
+            <img src="images/vertical-divider.jpg">
+            
+            <button onclick="reload()">Default</button>
+        
+            
+            
+            <img src="images/vertical-divider.jpg">
+            
+            Probability of bean moving to the left:
+            <select name="left_probability" id="left_probability" onchange="changeLeftProbability()">
+                <option value="0">0%</option>
+                <option value="1">10%</option>
+                <option value="2">20%</option>
+                <option value="3">30%</option> 
+                <option value="4">40%</option>
+                <option value="5" selected="selected">50%</option>
+                <option value="6">60%</option>
+                <option value="7">70%</option>
+                <option value="8">80%</option>
+                <option value="9">90%</option>
+                <option value="10">100%</option>
+            </select>
+            
+        </div>
+
+
+        <div id="bean_machine_container">
+            <canvas id="beanMachineCanvas" width="800" height="600" style="border:1px solid black;">
+                Your browser does not support the HTML5 canvas tag.
+            </canvas>
+            
+        </div>
+
+     
+        <div id="notice_container">
+        <a href="http://en.wikipedia.org/wiki/Bean_machine" target="_blank">Bean Machine</a> by Freeman Deutsch, freemansoftwaresolutions@gmail.com
+        </div>
+    
+     
+
+        <script>
+        
+
+            // ---------------------------------------------------
+
+
+
+            var beanMachine;
+            
+    
+            
+            // ---------------------------------------------------
+            
+            
+             function changeRunning() {
+             
+                beanMachine.settings.isRunning =  beanMachine.settings.isRunning ? false : true;
+
+            }
+            
+            function changeSpeed() {
+                var speed = document.getElementById("speed");
+                beanMachine.settings.speed = speed.value;
+                beanMachine.settings.frameDelay = beanMachine.settings.calculatFrameDelay();
+
+            }
+            
+            function changeLeftProbability() {
+            
+                reset();
+            
+                var leftProbability = document.getElementById("left_probability");
+                beanMachine.settings.leftProbability = leftProbability.value;
+            }
+
+                        
+            function reset() {
+                beanMachine.reset();
+            }
+            
+            function reload() {
+            
+                document.getElementById("state").checked = true;
+                document.getElementById("speed").value = 5;                                                
+                document.getElementById("left_probability").value = 5;   
+                
+                location.reload();
+            }
+
+            function init() {
+
+                beanMachine = new BeanMachineClass();
+                beanMachine.init();
+
+                animate();
+            }
+
+
+
+            // ------------------------------------------------------------
+
+
+            function animate() {
+
+                var c = document.getElementById("beanMachineCanvas");
+                var ctx = c.getContext("2d");
+
+
+                if (beanMachine.settings.isRunning != true) {
+                    setTimeout(animate, beanMachine.settings.frameDelay);
+                    return;
+                }
+
+                
+                // Calculate the path for the bean from top to bottom
+                
+                if (beanMachine.animationIndex == 0) {
+
+                    beanMachine.beanPathClass = new BeanPathClass(beanMachine.width, beanMachine.height);
+                    beanMachine.beanPathClass.init();
+                    
+                    // This tells us bean is comming from funnel to top most pin
+                    beanMachine.animationIndex = -1; 
+                }
+
+
+                // clear rectangle
+                ctx.clearRect(0, 0, 800, 600);
+
+
+                // Draw the static background
+                beanMachine.drawBackgound(ctx);
+
+
+                // Draw Animated Bean
+
+                beanMachine.drawAnimatedBean(ctx);
+
+                // Draw Distribution
+
+                beanMachine.drawDistribution(ctx);
+                
+                // Update animation
+
+                setTimeout(animate, beanMachine.settings.frameDelay);
+
+            }
+        </script>
+
+    </div>
+
+</body>
+
+</html>
